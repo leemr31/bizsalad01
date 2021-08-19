@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.AdminMapper">
+
+ 	<select id="company" resultType="com.biz4up.bizsalad.domain.AdminCompanyVO"> <!-- 업체관리 -->
+ 		select * from springboots.company left join springboots.company_info 
+ 		on springboots.company.company_seq = springboots.company_info.company_seq
+ 	</select>
+ 	<select id="user" resultType="com.biz4up.bizsalad.domain.AdminUserVO"> <!-- 회원관리 -->
+ 		select * from springboots.user left join springboots.user_info 
+ 		on springboots.user.user_seq = springboots.user_info.user_seq
+ 	</select>
+ 	
+ 	
+ 	<select id="settle" resultType="com.biz4up.bizsalad.domain.AdminSettleVO"> <!-- 정산관리 -->
+		select * from springboots.view_kongjeong2
+		order by oseq
+		
+	</select> 
+ 	<select id="product" resultType="com.biz4up.bizsalad.domain.AdminProductVO"> <!-- 상품관리 / 완성제품 -->
+		SELECT * FROM springboots.user_purchase;
+ 	</select>
+ 	<select id="cate" resultType="com.biz4up.bizsalad.domain.AdminCateVO"> <!-- 카테고리관리 -->
+ 		SELECT * FROM springboots.product;
+ 		<!-- 
+		SELECT * FROM springboots.manufacture left join springboots.material
+		on springboots.manufacture.manufacture_seq = springboots.material.manufacture_seq;
+		 -->
+ 	</select>
+ 	
+ 	
+ 	<select id="inquiry" resultType="com.biz4up.bizsalad.domain.AdminInquiryVO"> <!-- 1:1문의 -->
+		SELECT * FROM springboots.personal_qna;
+ 	</select>
+ 	<select id="qna" resultType="com.biz4up.bizsalad.domain.AdminQnaVO"> <!-- 문의게시판 -->
+		SELECT * FROM springboots.qna;
+ 	</select>
+ 	<select id="tell" resultType="com.biz4up.bizsalad.domain.AdminTellVO"> <!-- 신고게시판 -->
+		SELECT * FROM springboots.report;
+ 	</select>
+ 	<select id="notice" resultType="com.biz4up.bizsalad.domain.AdminNoticeVO"> <!-- 공지사항 -->
+		SELECT * FROM springboots.notice;
+ 	</select>
+ 	
+ 	
+ 	<select id="review_done" resultType="com.biz4up.bizsalad.domain.AdminReviewDoneVO"> <!-- 완성후기 /공정 작업완료 업체가 쓰는거-->
+		SELECT * FROM springboots.factual_review;
+ 	</select>
+ 	<select id="review_process" resultType="com.biz4up.bizsalad.domain.AdminReviewProcessVO"> <!-- 공정별후기 /공정주문 사용자 쓰는거 -->
+		SELECT * FROM springboots.factual_qna;
+ 	</select>
+ 	<select id="review_product" resultType="com.biz4up.bizsalad.domain.AdminReviewProductVO"> <!-- 상품후기 /완성후기 같은데? 태인-->
+		SELECT * FROM springboots.product_review;
+ 	</select>
+ 	
+ 	
+ 	<select id="banner_main" resultType="com.biz4up.bizsalad.domain.AdminBannerMainVO"> <!-- 메인배너 -->
+		SELECT * FROM springboots.product;
+ 	</select>
+ 	<select id="banner_product" resultType="com.biz4up.bizsalad.domain.AdminBannerProductVO"> <!-- 제작상품배너 -->
+		SELECT * FROM springboots.product;
+ 	</select>
+ 	<select id="banner_utube" resultType="com.biz4up.bizsalad.domain.AdminBannerUtubeVO"> <!-- 유투브영상배너 -->
+		SELECT * FROM springboots.product;
+ 	</select>
+ 	<select id="banner_influ" resultType="com.biz4up.bizsalad.domain.AdminBannerInfluVO"> <!-- 인플루언서배너 -->
+		SELECT * FROM springboots.product;
+ 	</select>
+ 	<select id="banner_review" resultType="com.biz4up.bizsalad.domain.AdminBannerReviewVO"> <!-- 제작후기배너 -->
+		SELECT * FROM springboots.product;
+ 	</select>
+ 	
+ 	
+ 	
+ </mapper>

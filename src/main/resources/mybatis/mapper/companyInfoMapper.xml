@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.companyInfoMapper">
+	<insert id="infoInsert"
+		parameterType="com.biz4up.bizsalad.company.CompanyInfoVO">
+		INSERT INTO springboots.company_info
+		(company_seq,company_type, manufact_01)
+		VALUES
+		(#{company_seq},0,'manf_0000000001')
+	</insert>
+	<update id="infoUpdate"
+		parameterType="com.biz4up.bizsalad.company.CompanyInfoVO">
+		update springboots.company_info set
+		company_email =
+		#{company_email},company_tel = #{company_tel},
+		company_name
+		=#{company_name},
+		manufact_01 =#{manufact_01}, manufact_02 =
+		#{manufact_02},
+		manufact_03 =#{manufact_03}, manufact_04 =
+		#{manufact_04}, manufact_05
+		=#{manufact_05}
+		where
+		company_seq=#{company_seq}
+	</update>
+
+	<insert id="account"
+		parameterType="com.biz4up.bizsalad.user.AcntVO">
+		insert into springboots.account
+		(account_seq,user_seq,company_seq,account_bank_name,account_bank_number,account_name)
+		values
+		(springboots.fn_get_seq_15('acct_'),#{user_seq},#{company_seq},#{account_bank_name},#{account_bank_number},#{account_name})
+	</insert>
+	<select id="manulist"
+		resultType="com.biz4up.bizsalad.company.ManuVO">
+		select * from springboots.manufacture
+	</select>
+	<select id="list"
+		resultType="com.biz4up.bizsalad.company.CompanyInfoVO"
+		parameterType="String">
+		select * from springboots.company_info
+		<if test="company_seq!=null and !company_seq.equals('')">
+			where company_seq=#{company_seq}
+		</if>
+	</select>
+	<select id="accountread" parameterType="String"
+		resultType="com.biz4up.bizsalad.user.AcntVO">
+		select * from springboots.account where
+		company_seq=#{company_seq}
+	</select>
+	<update id="acntUpdate"
+		parameterType="com.biz4up.bizsalad.user.AcntVO">
+		update springboots.account set
+		account_bank_name=#{account_bank_name} , account_bank_number=#{account_bank_number},
+		account_name=#{account_name}
+		where
+		company_seq=#{company_seq}
+	</update>
+</mapper>

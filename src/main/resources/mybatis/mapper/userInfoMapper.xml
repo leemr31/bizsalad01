@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.UserInfoMapper">
+	<update id="update"
+		parameterType="com.biz4up.bizsalad.user.UserInfoVO">
+		update springboots.user_info set
+		user_email=#{user_email}, user_name=#{user_name},
+		user_tel=#{user_tel}, user_age=#{user_age},user_gender=#{user_gender},
+		user_type=1 where user_seq=#{user_seq}
+	</update>
+	<update id="update_email"
+		parameterType="com.biz4up.bizsalad.user.UserInfoVO">
+		update springboots.user_info set
+		user_type=#{user_type} where user_seq=#{user_seq}
+	</update>
+	<select id="read"
+		resultType="com.biz4up.bizsalad.user.UserInfoVO"
+		parameterType="String">
+		select * from springboots.user_info
+		where user_seq=#{user_seq}
+	</select>
+	<insert id="insert">
+		insert into
+		springboots.user_info(user_seq)
+		values(#{user_seq})
+	</insert>
+	<insert id="address"
+		parameterType="com.biz4up.bizsalad.user.UserAddrVO">
+		INSERT INTO springboots.user_address
+		(user_address_seq,user_seq,address_name,address1,address2,post_code,tel,usable,saved)
+		VALUES
+		(springboots.fn_get_seq_15('addr_'),#{user_seq},#{address_name},#{address1},#{address2},#{post_code},#{tel},#{usable},#{saved})
+	</insert>
+
+	<insert id="account"
+		parameterType="com.biz4up.bizsalad.user.AcntVO">
+		insert into springboots.account
+		(account_seq,user_seq,company_seq,account_bank_name,account_bank_number,account_name)
+		values
+		(springboots.fn_get_seq_15('acct_'),#{user_seq},#{company_seq},#{account_bank_name},#{account_bank_number},#{account_name})
+	</insert>
+
+	<select id="readAcnt"
+		resultType="com.biz4up.bizsalad.user.AcntVO" parameterType="String">
+		select *
+		from springboots.account where user_seq=#{user_seq}
+	</select>
+	<select id="readAddr"
+		resultType="com.biz4up.bizsalad.user.UserAddrVO">
+		select * from springboots.user_address where
+		user_seq=#{user_seq}
+	</select>
+	<update id="updateAcnt">
+		update springboots.account set
+		account_bank_name=#{account_bank_name} ,
+		account_bank_number=#{account_bank_number},
+		account_name=#{account_name}
+		where user_seq=#{user_seq}
+	</update>
+</mapper>

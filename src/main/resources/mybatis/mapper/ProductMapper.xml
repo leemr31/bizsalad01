@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.biz4up.bizsalad.mapper.ProductMapper"> 
+	<select id="proList" resultType="com.biz4up.bizsalad.domain.ProductVO"> 
+		select * from springboots.product
+	</select> 
+	<select id="manfList" resultType="com.biz4up.bizsalad.domain.ManufactureVO"> 
+		select * from springboots.manufacture
+	</select> 
+	<select id="matrList" resultType="com.biz4up.bizsalad.domain.MaterialVO"> 
+		select * from springboots.material
+	</select>
+	
+	<select id="proRead" resultType="com.biz4up.bizsalad.domain.ProductVO"> 
+		select * from springboots.product
+		where product_seq=#{product_seq}
+	</select>  
+</mapper>

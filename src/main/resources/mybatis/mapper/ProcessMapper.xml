@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.ProcessMapper">
+ 	<select id="listJSON" resultType="com.biz4up.bizsalad.domain.Company_orderVO">
+ 		select a.*, RIGHT(c.purchase_seq, 10) as puseq, c.purchase_seq, c.purchase_type, c.purchase_status, c.purchase_date 
+		from springboots.view_option_content_all as a left join springboots.ordered as b
+		on a.cart_seq = b.cart_seq
+		left join springboots.user_purchase as c
+		on b.purchase_seq = c.purchase_seq
+		<if test="searchType=='purchase_seq'">
+          where c.purchase_seq like concat('%', #{keyword}, '%') and a.accept like concat('%', #{purchase_type}, '%') and c.purchase_status = 1  
+       </if>
+       <if test="searchType=='user_name'">
+           where user_name like concat('%', #{keyword}, '%') and a.accept like concat('%', #{purchase_type}, '%') and c.purchase_status = 1
+       </if>
+		 and company_seq=#{company_seq}
+		 group by option_seq
+		 limit #{pageStart}, #{perPageNum}
+ 	</select>
+ 	
+ 	<select id="totalCount" resultType="int">
+ 		select count(*)
+		from springboots.view_option_content_all as a left join springboots.ordered as b
+		on a.cart_seq = b.cart_seq
+		left join springboots.user_purchase as c
+		on b.purchase_seq = c.purchase_seq
+		where company_seq=#{company_seq}
+		<if test="searchType=='purchase_seq'">
+        	and b.purchase_seq like concat('%', #{keyword}, '%') and a.accept like concat('%', #{purchase_type}, '%') and c.purchase_status = 1
+       </if>
+       <if test="searchType=='user_name'">
+           and user_name like concat('%', #{keyword}, '%') and a.accept like concat('%', #{purchase_type}, '%') and c.purchase_status = 1
+       </if>
+ 	</select>
+ 	
+ 	<select id="company" resultType="com.biz4up.bizsalad.domain.Company_infoVO">
+ 		select * from springboots.company_info
+ 	</select>
+ 	
+ 	<select id="read" resultType="com.biz4up.bizsalad.domain.OrderVO">
+ 		select a.*, b.*
+		from springboots.ordered as a left join springboots.cart_option as b
+		on a.cart_seq = b.cart_seq where option_seq=#{option_seq}
+ 	</select>
+ 	
+ 	<select id="image" resultType="com.biz4up.bizsalad.domain.Company_orderVO">
+ 		select a.*, RIGHT(c.purchase_seq, 10) as puseq, c.purchase_seq, c.purchase_type, c.purchase_status, c.purchase_date 
+		from springboots.view_option_content_all as a left join springboots.ordered as b
+		on a.cart_seq = b.cart_seq
+		left join springboots.user_purchase as c
+		on b.purchase_seq = c.purchase_seq
+		where option_seq=#{option_seq}
+ 	</select>
+ 	
+ 	<update id="update">
+ 		update springboots.cart_option set day=#{day}, accept=1, accept_date=now() 
+ 		where option_seq=#{option_seq}
+ 	</update>
+ 	
+ 	<insert id="insert" parameterType="com.biz4up.bizsalad.domain.FactualQnAVO">
+ 		insert into springboots.factual_qna (fqna_bbs_seq, company_seq, user_seq, option_seq, contents, file, file2, file3, file4, file5)
+ 		values (springboots.fn_get_seq_15('fqna_'), #{company_seq}, #{user_seq}, #{option_seq}, #{contents}, #{file}, #{file2}, 
+ 		#{file3}, #{file4}, #{file5})
+ 	</insert>
+</mapper>

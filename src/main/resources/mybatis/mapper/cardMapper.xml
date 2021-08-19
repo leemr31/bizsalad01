@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.cardMapper">
+	<select id="list" resultType="com.biz4up.bizsalad.user.CardVO"
+		parameterType="String">
+		select *
+		from springboots.user_card where
+		user_seq=#{user_seq}
+	</select>
+	<insert id="insert"
+		parameterType="com.biz4up.bizsalad.user.CardVO">
+		insert into springboots.user_card
+		(user_card_seq,
+		user_seq, card_name, card_nickname, card_number, card_password,
+		card_cvc,card_mm,card_yy)
+		values
+		(springboots.fn_get_seq_15('card_'),#{user_seq},#{card_name},#{card_nickname},#{card_number},#{card_password},#{card_cvc},#{card_mm},#{card_yy})
+	</insert>
+	<delete id="delete" parameterType="String">
+		delete from springboots.user_card where user_card_seq=#{user_card_seq}
+	</delete>
+	<update id="update">
+		update springboots.user_card set
+		card_name=#{card_name}, card_nickname=#{card_nickname},
+		card_number=#{card_number},card_cvc=#{card_cvc},card_mm=#{card_mm},card_yy=#{card_yy},card_password=#{card_password}
+		where user_card_seq=#{user_card_seq}
+	</update>
+</mapper>

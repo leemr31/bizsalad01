@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.PqnaMapper">
+	<select id="list" resultType="com.biz4up.bizsalad.domain.PqnaVO">
+		select * from springboots.personal_qna where user_seq = #{user_seq}
+		<if test="searchType=='전체'">
+			and type like concat('%','','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='로그인/회원정보'">
+			and type like concat('%','로그인','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='취소/교환/반품'">
+			and type like concat('%','취소','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='배송 관련'">
+			and type like concat('%','배송','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='제작 관련'">
+			and type like concat('%','제작','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='기타'">
+			and type like concat('%','제작','%') and contents like concat('%',#{keyword},'%')
+		</if>		
+		order by pqna_bbs_seq desc
+		limit #{pageStart}, #{perPageNum}
+	</select>
+	
+	<select id="totalCount" resultType="int">
+ 		select count(*) from springboots.personal_qna where user_seq = #{user_seq}
+ 		<if test="searchType=='전체'">
+			and type like concat('%','','%') and contents like concat('%',#{keyword},'%')
+		</if>
+ 		<if test="searchType=='로그인/회원정보'">
+			and type like concat('%','로그인','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='취소/교환/반품'">
+			and type like concat('%','취소','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='배송 관련'">
+			and type like concat('%','배송','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='제작 관련'">
+			and type like concat('%','제작','%') and contents like concat('%',#{keyword},'%')
+		</if>
+		<if test="searchType=='기타'">
+			and type like concat('%','제작','%') and contents like concat('%',#{keyword},'%')
+		</if>	
+ 	</select>
+ 	
+	<insert id="insert">
+		insert into springboots.personal_qna(pqna_bbs_seq, user_seq, type, contents, file, file2, file3, file4, file5)
+		values(springboots.fn_get_seq_15('pqna_'), #{user_seq}, #{type}, #{contents}, #{file}, #{file2}, #{file3}, #{file4}, #{file5})
+	</insert>
+	
+	<select id="read" resultType="com.biz4up.bizsalad.domain.PqnaVO">
+		select * from springboots.personal_qna where pqna_bbs_seq= #{pqna_bbs_seq}
+	</select>
+	
+	<update id="update">
+		update springboots.personal_qna set type=#{type},contents=#{contents},file=#{file},file2=#{file2},file3=#{file3},file4=#{file4},file5=#{file5}
+		where pqna_bbs_seq=#{pqna_bbs_seq}
+	</update>
+	
+	<delete id="delete">
+		delete from springboots.personal_qna where pqna_bbs_seq=#{pqna_bbs_seq}
+	</delete>
+	
+	<!-- 댓글 읽기 -->
+	<select id="replyList" resultType="com.biz4up.bizsalad.domain.PqnaReplyVO">
+		select * from springboots.personal_qna_reply where pqna_bbs_seq = #{pqna_bbs_seq}
+	</select>
+	
+	<!-- 댓글 쓰기 -->
+	<insert id="replyInsert">
+		insert into springboots.personal_qna_reply(pqna_reply_bbs_seq, contents, pqna_bbs_seq)
+		values(springboots.fn_get_seq_15('prep_'), #{contents}, #{pqna_bbs_seq})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="replyDelete">
+		delete from springboots.personal_qna_reply where pqna_reply_bbs_seq=#{pqna_reply_bbs_seq};
+	</delete>
+</mapper>

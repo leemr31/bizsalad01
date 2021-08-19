@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.biz4up.bizsalad.mapper.cartOptionMapper"> 
+	
+	<select id="mlist" resultType="com.biz4up.bizsalad.domain.MaterialVO">
+		select * from springboots.material
+		where manufacture_seq=#{manufacture_seq}
+	</select>
+	
+	<insert id="insert">
+		insert into springboots.cart_option(option_seq, cart_seq, material_seq, cart_option, company_seq)
+		values(springboots.fn_get_seq_15('optn_'),#{cart_seq},#{material_seq},#{cart_option},#{company_seq})
+	</insert>
+	
+	<select id="materialPrice" resultType="int">
+		select material_price from springboots.material where material_seq = #{material_seq}
+	</select>
+	
+	<select id="lastId" resultType="String">
+ 		select max(option_seq) from springboots.cart_option where cart_seq=#{cart_seq}
+ 	</select>
+ 	
+	<update id="update">
+		update springboots.cart
+		set cart_name=#{cart_name}, cart01=#{cart01}, cart02=#{cart02},
+		cart03=#{cart03}, cart04=#{cart04}, cart05=#{cart05},
+		cart06=#{cart06}, cart07=#{cart07}, cart08=#{cart08},
+		cart09=#{cart09}, cart10=#{cart10}
+		where cart_seq=#{cart_seq}, user_seq=#{user_seq}
+	</update>
+
+	
+</mapper>

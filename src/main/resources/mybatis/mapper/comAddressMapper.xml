@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.address.comAddressDAO"> 
+ 	<select id="addressList" resultType="com.biz4up.bizsalad.comaddress.ComAddressVO">
+ 		select * from springboots.com_address
+ 	</select>
+ 	
+ 	<select id="read" resultType="com.biz4up.bizsalad.comaddress.ComAddressVO">
+ 		select * from springboots.com_address where company_seq=#{company_seq} and usable=1
+ 	</select>
+ 	
+ 	<select id="addressList2" resultType="com.biz4up.bizsalad.comaddress.ComAddressVO">
+ 		select * from springboots.com_address where company_seq=#{company_seq} and saved=1
+ 	</select>
+ 	
+ 	<insert id="addressInsert">
+ 	 	insert into springboots.com_address(com_address_seq,company_seq,address_name,address1,address2,post_code,tel,saved)
+ 	 	values(springboots.fn_get_seq_15('cddr_'),#{company_seq},#{address_name},#{address1},#{address2},#{post_code},#{tel},#{saved})
+ 	</insert>
+ 	
+ 	<select id="lastId" resultType="String">
+ 		select max(com_address_seq) from springboots.com_address where company_seq=#{company_seq}
+ 	</select>
+ 	
+ 	<select id="addressUpdate">
+ 		update springboots.com_address set address_name=#{address_name},address1=#{address1},
+ 		address2=#{address2},tel=#{tel},post_code=#{post_code} where com_address_seq=#{com_address_seq} 
+ 	</select>
+ 	
+ 	<select id="addressDelete">
+ 		delete from springboots.com_address where com_address_seq = #{com_address_seq}
+ 	</select>
+</mapper>

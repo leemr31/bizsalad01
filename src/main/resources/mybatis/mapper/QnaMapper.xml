@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.QnaMapper">
+	<select id="list" resultType="com.biz4up.bizsalad.domain.QnaVO">
+		select * from springboots.view_qna
+		<if test="searchType=='title'">
+ 			where title like concat('%',#{keyword},'%')
+ 		</if>
+ 		<if test="searchType=='type'">
+ 			where type like concat('%',#{keyword},'%')
+ 		</if>
+ 		<if test="searchType=='user_id'">
+ 			where user_id like concat('%',#{keyword},'%')
+ 		</if>
+		order by qna_bbs_seq desc
+		limit #{pageStart}, #{perPageNum}
+	</select>
+	
+	<select id="totalCount" resultType="int">
+ 		select count(*) from springboots.view_qna
+ 			<if test="searchType=='title'">
+ 			where title like concat('%',#{keyword},'%')
+ 		</if>
+ 		<if test="searchType=='type'">
+ 			where type like concat('%',#{keyword},'%')
+ 		</if>
+ 			<if test="searchType=='user_id'">
+ 			where user_id like concat('%',#{keyword},'%')
+ 		</if>
+ 	</select>
+ 	
+	<insert id="insert">
+		insert into springboots.qna(qna_bbs_seq, user_seq, type, contents, file, file2, file3, file4, file5, title)
+		values(springboots.fn_get_seq_15('qbbs_'), #{user_seq}, #{type}, #{contents}, #{file}, #{file2}, #{file3}, #{file4}, #{file5}, #{title})
+	</insert>
+	
+	<select id="read" resultType="com.biz4up.bizsalad.domain.QnaVO">
+		select * from springboots.view_qna where qna_bbs_seq= #{qna_bbs_seq}
+	</select>
+	
+	<update id="update">
+		update springboots.qna set type=#{type},contents=#{contents},file=#{file},file2=#{file2},file3=#{file3},file4=#{file4},file5=#{file5},title=#{title}
+		where qna_bbs_seq=#{qna_bbs_seq}
+	</update>
+	
+	<delete id="delete">
+		delete from springboots.qna where qna_bbs_seq=#{qna_bbs_seq}
+	</delete>
+	
+	<!-- 댓글 읽기 -->
+	<select id="replyList" resultType="com.biz4up.bizsalad.domain.QnaReplyVO">
+		select * from springboots.qna_reply where qna_bbs_seq = #{qna_bbs_seq}
+	</select>
+	
+	<!-- 댓글 쓰기 -->
+	<insert id="replyInsert">
+		insert into springboots.qna_reply(qna_reply_bbs_seq, contents, qna_bbs_seq)
+		values(springboots.fn_get_seq_15('qrep_'), #{contents}, #{qna_bbs_seq})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="replyDelete">
+		delete from springboots.qna_reply where qna_reply_bbs_seq=#{qna_reply_bbs_seq};
+	</delete>
+</mapper>

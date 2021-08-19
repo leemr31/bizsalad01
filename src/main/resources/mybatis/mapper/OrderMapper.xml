@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.biz4up.bizsalad.mapper.OrderMapper"> 
+	<select id="list" resultType="com.biz4up.bizsalad.domain.KongjeongVO"> 
+		select * from springboots.view_kongjeong
+		<if test="searchType=='oseq'">
+			where user_seq like concat('%', #{user_seq}, '%') and oseq like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='user_email'">
+			where user_seq like concat('%', #{user_seq}, '%') and user_email like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='pseq'">
+			where user_seq like concat('%', #{user_seq}, '%') and pseq like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='type'">
+			where user_seq like concat('%', #{user_seq}, '%') and type like concat('%', #{keyword}, '%')
+		</if>
+		order by oseq
+		limit #{pageStart}, #{perPageNum}
+	</select> 
+	
+	<select id="list_pms" resultType="com.biz4up.bizsalad.domain.KongjeongVO"> <!-- 20210715 thanksgv -->
+		select * from springboots.view_kongjeong
+		<if test="searchType=='oseq'">
+			where oseq like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='user_email'">
+			where user_email like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='pseq'">
+			where pseq like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='type'">
+			where type like concat('%', #{keyword}, '%')
+		</if>
+		and user_seq = 'user_0000000003' <!-- 관리자용 seq -->
+		order by oseq
+		limit #{pageStart}, #{perPageNum}
+	</select> 
+	
+	<select id="read" resultType="com.biz4up.bizsalad.domain.KongjeongVO"> 
+		select * from springboots.view_kongjeong
+		where oseq=#{oseq}
+	</select> 
+	<select id="read2" resultType="com.biz4up.bizsalad.domain.KongjeongVO"> 
+		select * from springboots.view_kongjeong
+		where order_seq=#{order_seq}
+	</select> 
+	<select id="optionread" resultType="com.biz4up.bizsalad.domain.OptionContentVO"> 
+		select b.product_name, a.order_seq, a.quantity, a.order_date, b.material_seq, b.material_name, b.material_price, (a.quantity * b.material_price) as tot,
+b.company_seq, b.company_name, b.accept, b.manufacture_seq, b.manufacture_name,  b.cart_seq, b.option_seq
+from springboots.ordered as a left join springboots.view_option_content_all as b
+on a.cart_seq=b.cart_seq where option_seq=#{cart01};
+	</select>
+	<select id="optionreadinto" resultType="string"> 
+		select cart_option from springboots.cart_option
+		where option_seq=#{cart01}
+	</select>
+	<select id="cartdescread" resultType="string"> 
+		select cart_desc from springboots.cart
+		where cart_seq=#{cart_seq}
+	</select>
+	
+	<select id="totalCount" resultType="int"> 
+		select count(*) from springboots.view_kongjeong
+		<if test="searchType=='oseq'">
+			where user_seq like concat('%', #{user_seq}, '%') and oseq like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='user_email'">
+			where user_seq like concat('%', #{user_seq}, '%') and user_email like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='pseq'">
+			where user_seq like concat('%', #{user_seq}, '%') and pseq like concat('%', #{keyword}, '%')
+		</if>
+		<if test="searchType=='type'">
+			where user_seq like concat('%', #{user_seq}, '%') and type like concat('%', #{keyword}, '%')
+		</if>
+	</select>
+	
+	<insert id="insertReview">
+		insert into springboots.product_review(pr_bbs_seq, purchase_seq, user_seq, contents, pr_bbs_date, point)
+		values(springboots.fn_get_seq_15('pbbs_'), #{purchase_seq}, #{user_seq}, #{contents}, now(), #{point})
+	</insert>
+	<select id="readReview" resultType="com.biz4up.bizsalad.domain.ReviewVO"> 
+		select * from springboots.product_review
+		where purchase_seq=#{purchase_seq}
+	</select>
+	<select id="readFacReview" resultType="com.biz4up.bizsalad.domain.FacReviewVO"> 
+		select * from springboots.factual_review
+		where option_seq=#{option_seq}
+	</select>
+	<insert id="facreviewreply">
+		insert into springboots.factual_review_reply(fr_reply_bbs_seq, contents, fr_bbs_seq, fr_reply_date)
+		values(springboots.fn_get_seq_15('frbs_'), #{contents}, #{fr_bbs_seq}, now())
+	</insert>
+	<select id="readFactualReply" resultType="com.biz4up.bizsalad.domain.FactualReplyVO"> 
+		select * from springboots.factual_review_reply
+		where fr_bbs_seq=#{fr_bbs_seq}
+	</select>
+	
+	<insert id="orderInsert">
+ 		insert into springboots.ordered(order_seq,cart_seq,purchase_seq,quantity,price,type)
+ 		values(springboots.fn_get_seq_15('ordr_'),#{cart_seq},#{purchase_seq},#{quantity},#{price},#{type})
+ 	</insert>
+ 	
+ 	<select id="card" resultType="com.biz4up.bizsalad.domain.UserCardVO">
+ 		select * from springboots.user_card where user_seq=#{user_seq} 
+ 	</select>
+ 	
+ 	<select id="account" resultType="com.biz4up.bizsalad.domain.AccountVO">
+ 		select * from springboots.account where user_seq=#{user_seq}
+ 	</select>
+ 	
+ 	<insert id="purchaseInsert">
+ 		insert into springboots.user_purchase(purchase_seq, user_seq, user_address_seq, order_address_seq,
+ 		purchase_total, purchase_comment, purchase_email, purchase_type, purchase_payType, purchase_status)
+ 		values(springboots.fn_get_seq_15('purc_'), #{user_seq}, #{user_address_seq}, #{order_address_seq}, #{purchase_total},
+ 		#{purchase_comment}, #{purchase_email}, #{purchase_type}, #{purchase_payType}, #{purchase_status})
+ 	</insert>
+ 	
+ 	<update id="orderUpdate">
+ 		update springboots.ordered set purchase_seq=#{purchase_seq},
+ 		price=#{price} where cart_seq=#{cart_seq}
+ 	</update>
+	
+	<select id="order_list" resultType="com.biz4up.bizsalad.domain.OrderTempVO">
+		select * from springboots.view_kongjeong
+		<if test="searchType=='purchase_seq'">
+			where purchase_seq like concat('%',#{keyword},'%') and type like concat('%',#{type},'%')
+		</if>
+		<if test="searchType=='address_name'">
+			where user_name like concat('%',#{keyword},'%') and type like concat('%',#{type},'%')
+		</if>
+		order by purchase_date desc
+		limit #{pageStart}, #{perPageNum}
+	</select>
+
+	<select id="totalCount_mr" resultType="int">
+		select count(*) from springboots.view_kongjeong
+		<if test="searchType=='purchase_seq'">
+			where purchase_seq like concat('%',#{keyword},'%') and type like concat('%',#{type},'%')
+		</if>
+		<if test="searchType=='address_name'">
+			where user_name like concat('%',#{keyword},'%') and type like concat('%',#{type},'%')
+		</if>
+	</select>
+	
+	
+	<select id="lastId" resultType="String">
+       select max(order_seq) from springboots.ordered
+    </select>
+    
+    <select id="purlastId" resultType="String">
+       select max(purchase_seq) from springboots.user_purchase where user_seq=#{user_seq}
+    </select>
+</mapper>

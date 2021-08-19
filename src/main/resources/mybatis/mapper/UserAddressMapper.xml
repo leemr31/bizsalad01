@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.persistence.UserAddressDAO"> 
+ 	<select id="addressList" resultType="com.biz4up.bizsalad.domain.UserAddressVO">
+ 		select * from springboots.user_address
+ 	</select>
+ 	
+ 	<select id="read" resultType="com.biz4up.bizsalad.domain.UserAddressVO">
+ 		select * from springboots.user_address where user_seq=#{user_seq} and usable=1
+ 	</select>
+ 	
+ 	<select id="addressList2" resultType="com.biz4up.bizsalad.domain.UserAddressVO">
+ 		select * from springboots.user_address where user_seq=#{user_seq} and saved=1
+ 	</select>
+ 	
+ 	<insert id="addressInsert">
+ 	 	insert into springboots.user_address(user_address_seq,user_seq,address_name,address1,address2,post_code,tel,saved)
+ 	 	values(springboots.fn_get_seq_15('addr_'),#{user_seq},#{address_name},#{address1},#{address2},#{post_code},#{tel},#{saved})
+ 	</insert>
+ 	
+ 	<select id="lastId" resultType="String">
+ 		select max(user_address_seq) from springboots.user_address where user_seq=#{user_seq}
+ 	</select>
+ 	
+ 	<select id="addressUpdate">
+ 		update springboots.user_address set address_name=#{address_name},address1=#{address1},
+ 		address2=#{address2},tel=#{tel},post_code=#{post_code} where user_address_seq=#{user_address_seq} 
+ 	</select>
+ 	
+ 	<select id="addressDelete">
+ 		delete from springboots.user_address where user_address_seq = #{user_address_seq}
+ 	</select>
+</mapper>

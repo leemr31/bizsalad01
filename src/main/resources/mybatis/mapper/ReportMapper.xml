@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.ReportMapper">
+	<select id="list" resultType="com.biz4up.bizsalad.domain.ReportVO">
+		select * from springboots.report where company_seq = #{company_seq}
+		<if test="searchType=='title'">
+ 			and title like concat('%',#{keyword},'%')
+ 		</if>
+ 		<if test="searchType=='contents'">
+ 			and contents like concat('%',#{keyword},'%')
+ 		</if>
+		order by rp_bbs_seq desc
+		limit #{pageStart}, #{perPageNum}
+	</select>
+	
+	<select id="totalCount" resultType="int">
+ 		select count(*) from springboots.report where company_seq = #{company_seq}
+ 		<if test="searchType=='title'">
+ 			and title like concat('%',#{keyword},'%')
+ 		</if>
+ 		<if test="searchType=='contents'">
+ 			and contents like concat('%',#{keyword},'%')
+ 		</if>	
+ 	</select>
+ 	
+	<insert id="insert">
+		insert into springboots.report(rp_bbs_seq, option_seq, company_seq, title, contents, file, file2, file3, file4, file5)
+		values(springboots.fn_get_seq_15('repo_'), #{option_seq}, #{company_seq}, #{title}, #{contents}, #{file}, #{file2}, #{file3}, #{file4}, #{file5})
+	</insert>
+	
+	<select id="read" resultType="com.biz4up.bizsalad.domain.ReportVO">
+		select * from springboots.report where rp_bbs_seq= #{rp_bbs_seq}
+	</select>
+	
+	<update id="update">
+		update springboots.report set contents=#{contents},file=#{file},file2=#{file2},file3=#{file3},file4=#{file4},file5=#{file5}
+		where rp_bbs_seq=#{rp_bbs_seq}
+	</update>
+	
+	<update id="updateType">
+		update springboots.report set type=#{type} where rp_bbs_seq=#{rp_bbs_seq}
+	</update>
+	
+	<delete id="delete">
+		delete from springboots.report where rp_bbs_seq=#{rp_bbs_seq}
+	</delete>
+	
+	<!-- 댓글 읽기 -->
+	<select id="replyList" resultType="com.biz4up.bizsalad.domain.ReportReplyVO">
+		select * from springboots.report_reply where rp_bbs_seq = #{rp_bbs_seq}
+	</select>
+	
+	<!-- 댓글 쓰기 -->
+	<insert id="replyInsert">
+		insert into springboots.report_reply(rp_reply_seq, contents, rp_bbs_seq)
+		values(springboots.fn_get_seq_15('rpre_'), #{contents}, #{rp_bbs_seq})
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="replyDelete">
+		delete from springboots.report_reply where rp_reply_seq=#{rp_reply_seq};
+	</delete>
+</mapper>

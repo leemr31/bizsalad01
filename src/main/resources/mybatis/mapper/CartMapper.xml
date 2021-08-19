@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.persistence.CartDAO"> 
+ 	
+ 	<select id="cartList" resultType="com.biz4up.bizsalad.domain.CartVO">
+ 		select * from springboots.cart where user_seq=#{user_seq}
+ 	</select>
+ 	
+ 	<select id="cartSum" resultType="int">
+ 		select sum(material_price) from springboots.cart_option as a left join
+ 		springboots.material as b on a.material_seq = b.material_seq where a.cart_seq=#{cart_seq};
+ 	</select>
+ 	
+ 	<insert id="insert">
+		insert into springboots.cart(cart_seq, user_seq, product_seq, quick, cart_desc)
+		values(springboots.fn_get_seq_15('cart_'),#{user_seq}, #{product_seq}, #{quick}, #{cart_desc})
+	</insert>
+ 	
+ 	<update id="update">
+		update springboots.cart
+		set cart01=#{cart01}, cart02=#{cart02},
+		cart03=#{cart03}, cart04=#{cart04}, cart05=#{cart05},
+		cart06=#{cart06}, cart07=#{cart07}, cart08=#{cart08},
+		cart09=#{cart09}, cart10=#{cart10}
+		where cart_seq=#{cart_seq} and user_seq=#{user_seq}
+	</update>
+	
+	
+	<select id="cartRead" resultType="com.biz4up.bizsalad.domain.CartVO">
+ 		select * from springboots.cart where cart_seq=#{cart_seq}
+ 	</select>
+ 	
+ 	<select id="lastId" resultType="String">
+ 		select max(cart_seq) from springboots.cart where user_seq=#{user_seq}
+ 	</select>
+ 	
+</mapper>

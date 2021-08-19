@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.biz4up.bizsalad.mapper.BoardMapper">
+<select id="listJSON" resultType="com.biz4up.bizsalad.domain.Product_reviewVO"> 
+		select * from springboots.product_review
+		<if test="searchType=='purchase_seq'">
+			where purchase_seq like concat('%', #{keyword}, '%')
+		</if>
+		limit #{pageStart}, #{perPageNum}
+	</select>
+	<select id="totalCount" resultType="int"> 
+		select count(*) from springboots.product_review
+		<if test="searchType=='purchase_seq'">
+			where purchase_seq like concat('%', #{keyword}, '%')
+		</if>
+	</select>
+	<select id="read" resultType="com.biz4up.bizsalad.domain.Product_reviewVO"> 
+		select * from springboots.product_review
+		where user_seq=#{user_seq}
+	</select> 
+</mapper>
